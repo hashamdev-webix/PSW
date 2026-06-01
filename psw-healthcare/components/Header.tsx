@@ -15,6 +15,7 @@ interface NavItem {
   label: string;
   href?: string;
   dropdown?: DropdownItem[];
+  hubHref?: string; // Hub page link for dropdown items
 }
 
 export function Header() {
@@ -30,8 +31,8 @@ export function Header() {
     { label: "ABOUT", href: "/about" },
     {
       label: "HOME CARE",
+      hubHref: "/home-care-calgary",
       dropdown: [
-        { label: "Home Care Services", href: "/home-care-calgary" },
         { label: "Senior Care", href: "/senior-care-calgary" },
         { label: "Personal Care Assistance", href: "/personal-care-calgary" },
         {
@@ -51,11 +52,8 @@ export function Header() {
     },
     {
       label: "HEALTHCARE STAFFING",
+      hubHref: "/healthcare-staffing-calgary",
       dropdown: [
-        {
-          label: "Healthcare Staffing Services",
-          href: "/healthcare-staffing-calgary",
-        },
         { label: "HCA Staffing", href: "/hca-staffing-calgary" },
         {
           label: "Temporary & Shift Staffing",
@@ -136,14 +134,15 @@ export function Header() {
               >
                 {item.dropdown ? (
                   <>
-                    <button
+                    <Link
+                      href={item.hubHref!}
                       className="flex items-center gap-1 text-slate-700 hover:text-navy font-medium transition-colors py-2"
-                      aria-expanded={openDropdown === item.label}
                       aria-haspopup="true"
+                      aria-expanded={openDropdown === item.label}
                     >
                       {item.label}
                       <ChevronDown className="w-4 h-4" />
-                    </button>
+                    </Link>
                     {openDropdown === item.label && (
                       <div className="absolute top-full left-0 mt-0 bg-white shadow-lg rounded-lg py-2 min-w-[260px] border border-gray-100">
                         {item.dropdown.map((dropdownItem) => (
@@ -215,20 +214,29 @@ export function Header() {
                 <div key={item.label}>
                   {item.dropdown ? (
                     <>
-                      <button
-                        onClick={() => toggleMobileDropdown(item.label)}
-                        className="w-full flex items-center justify-between text-slate-700 hover:text-navy font-medium py-2 transition-colors"
-                        aria-expanded={mobileOpenDropdown === item.label}
-                      >
-                        {item.label}
-                        <ChevronDown
-                          className={`w-4 h-4 transition-transform ${
-                            mobileOpenDropdown === item.label
-                              ? "rotate-180"
-                              : ""
-                          }`}
-                        />
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <Link
+                          href={item.hubHref!}
+                          className="flex-1 text-slate-700 hover:text-navy font-medium py-2 transition-colors"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {item.label}
+                        </Link>
+                        <button
+                          onClick={() => toggleMobileDropdown(item.label)}
+                          className="p-2 text-slate-700 hover:text-navy transition-colors"
+                          aria-expanded={mobileOpenDropdown === item.label}
+                          aria-label={`Toggle ${item.label} submenu`}
+                        >
+                          <ChevronDown
+                            className={`w-4 h-4 transition-transform ${
+                              mobileOpenDropdown === item.label
+                                ? "rotate-180"
+                                : ""
+                            }`}
+                          />
+                        </button>
+                      </div>
                       {mobileOpenDropdown === item.label && (
                         <div className="pl-4 flex flex-col gap-2 mt-2 mb-2">
                           {item.dropdown.map((dropdownItem) => (
