@@ -87,12 +87,6 @@
       "schedule": "0 0 * * *"
     }
   ],
-  "functions": {
-    "api/*.js": {
-      "maxDuration": 10,
-      "memory": 1024
-    }
-  },
   "trailingSlash": false,
   "cleanUrls": true
 }
